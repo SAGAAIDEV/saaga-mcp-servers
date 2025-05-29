@@ -1,0 +1,6 @@
+[submodule "src/saaga_mcp_servers/development/conduit"]
+	path = src/saaga_mcp_servers/development/conduit
+	url = https://github.com/codingthefuturewithai/conduit.git
+[submodule "src/saaga_mcp_servers/development/mcp-cookie-cutter"]
+	path = src/saaga_mcp_servers/development/mcp-cookie-cutter
+	url = https://github.com/codingthefuturewithai/mcp-cookie-cutter.git

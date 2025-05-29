@@ -387,122 +387,37 @@ All MCP tools follow the pattern `bluesky_{action}_{object}` for automatic disco
 - **Developer Experience:** Intuitive command structure with automatic documentation from docstrings
 - **Maintenance:** No separate CLI definition files or complex configuration required
 - **Google Backing:** Maintained by Google with proven reliability and extensive usage
-- **Perfect MCP Integration:** Seamlessly integrates with MCP server lifecycle management
 
 **CLI Architecture Design:**
 
-The Google Fire CLI provides a comprehensive interface for all MCP server operations:
-
 ```python
-# Complete CLI structure using Fire
+# Example CLI structure using Fire
 class BlueskyMCP:
-    """Bluesky Social Media MCP Server CLI Interface
-    
-    This CLI provides complete management of the Bluesky MCP server including
-    authentication, configuration, testing, and server lifecycle management.
-    """
+    """Bluesky Social Media MCP Server CLI Interface"""
     
     def __init__(self):
         self.config_manager = ConfigManager()
         self.bluesky_client = BlueSkyClient()
-        self.logger = logger
     
-    def auth(self, username: str = None, password: str = None, interactive: bool = True):
-        """Interactive authentication setup for Bluesky account.
+    def auth(self, username: str = None, password: str = None):
+        """Interactive authentication setup for Bluesky account"""
         
-        Args:
-            username: Bluesky username (e.g., user.bsky.social)
-            password: Bluesky password or app password
-            interactive: Enable interactive prompts for missing credentials
-        """
-        if interactive and not username:
-            username = input("Bluesky Username: ")
-        if interactive and not password:
-            password = getpass("Bluesky Password: ")
+    def config(self, action: str = "show"):
+        """Configuration management commands"""
         
-        # Validate and store credentials securely
+    def test(self, component: str = "all"):
+        """Test MCP functionality and validate configuration"""
         
-    def config(self, action: str = "show", file: str = None):
-        """Configuration management commands.
+    def server(self, debug: bool = False, port: int = None):
+        """Start MCP server with optional debug mode"""
         
-        Args:
-            action: Configuration action (show, validate, create, edit)
-            file: Configuration file path (defaults to ~/.config/mcp-bluesky/config.yaml)
-        """
-        
-    def test(self, component: str = "all", verbose: bool = False):
-        """Test MCP functionality and validate configuration.
-        
-        Args:
-            component: Component to test (all, auth, api, tools, config)
-            verbose: Enable verbose test output
-        """
-        
-    def server(self, debug: bool = False, port: int = None, host: str = "localhost"):
-        """Start MCP server with optional debug mode.
-        
-        Args:
-            debug: Enable debug logging and error details
-            port: Port number for server (optional, uses stdio by default)
-            host: Host address for server (when using port)
-        """
-        
-    def status(self, format: str = "table"):
-        """Check server and API connectivity status.
-        
-        Args:
-            format: Output format (table, json, yaml)
-        """
-        
-    def tools(self, action: str = "list"):
-        """MCP tools management and information.
-        
-        Args:
-            action: Tools action (list, describe, test)
-        """
+    def status(self):
+        """Check server and API connectivity status"""
 
-# CLI entry point with Fire integration
+# CLI entry point
 def main():
-    """Main CLI entry point using Google Fire."""
     fire.Fire(BlueskyMCP)
-
-if __name__ == "__main__":
-    main()
 ```
-
-**CLI Command Examples:**
-
-```bash
-# Authentication setup
-mcp-bluesky auth --username user.bsky.social --interactive
-
-# Start MCP server in debug mode
-mcp-bluesky server --debug
-
-# Test all components
-mcp-bluesky test --verbose
-
-# Check status in JSON format
-mcp-bluesky status --format json
-
-# List available MCP tools
-mcp-bluesky tools list
-
-# Show configuration
-mcp-bluesky config show
-
-# Create new configuration file
-mcp-bluesky config create --file /path/to/config.yaml
-```
-
-**Google Fire Benefits for MCP:**
-
-- **Automatic Help Generation:** Fire generates comprehensive help from docstrings
-- **Type Safety:** Automatic type conversion and validation for CLI arguments
-- **Nested Commands:** Natural hierarchy matching MCP server functionality
-- **Tab Completion:** Built-in bash/zsh completion support
-- **Error Handling:** Graceful error messages with context
-- **Development Speed:** Zero boilerplate for new CLI commands
 
 ### 3.8. YAML Configuration Management
 
@@ -747,9 +662,8 @@ uv tool install mcp-bluesky
 
 ### 6.2. Deployment Configuration
 
-**Package Distribution:** PyPI package `mcp-bluesky` with Google Fire CLI integration  
+**Package Distribution:** PyPI package `mcp-bluesky`  
 **Package Type:** Standard Python wheel with console script entry point  
-**CLI Framework:** Google Fire provides zero-configuration command interface  
 **Installation Methods:**
 
 ```bash
@@ -768,42 +682,21 @@ cd mcp-bluesky
 uv sync --dev
 ```
 
-**Package Entry Points with Google Fire CLI:**
+**Package Entry Points:**
 
 ```bash
-# Start MCP server (default stdio mode)
-mcp-bluesky server
+# Direct execution after installation
+mcp-bluesky
 
-# Interactive authentication setup
-mcp-bluesky auth
+# With explicit configuration
+mcp-bluesky --config config.json
 
-# Start server with debug logging
-mcp-bluesky server --debug
-
-# Test all functionality
-mcp-bluesky test --verbose
-
-# Check connectivity status
-mcp-bluesky status
-
-# Show configuration
-mcp-bluesky config show
-
-# List available MCP tools
-mcp-bluesky tools list
-
-# Get help for any command
-mcp-bluesky --help
-mcp-bluesky server --help
-mcp-bluesky auth --help
-
-# Via python module (alternative)
-python -m mcp_bluesky server
+# Via python module
+python -m mcp_bluesky
 ```
 
-**Configuration Method:** Environment variables with pydantic-settings + YAML config files  
+**Configuration Method:** Environment variables with pydantic-settings  
 **Startup Time:** <2 seconds for immediate MCP tool availability  
-**CLI Features:** Full Google Fire integration with automatic help generation  
 
 **Environment Variables:**
 
@@ -818,28 +711,23 @@ DEBUG=false
 CACHE_MAX_SIZE=100
 RATE_LIMIT_REQUESTS=300
 RATE_LIMIT_WINDOW=900
-
-# CLI-specific Configuration
-MCP_BLUESKY_CONFIG_FILE=~/.config/mcp-bluesky/config.yaml
-MCP_BLUESKY_LOG_FORMAT=json
 ```
 
-**Package Structure with CLI Integration:**
+**Package Structure:**
 
 ```
 mcp-bluesky/
-├── pyproject.toml          # Package configuration with Fire CLI
+├── pyproject.toml          # Package configuration
 ├── README.md               # Installation & usage guide
 ├── src/
 │   └── mcp_bluesky/
 │       ├── __init__.py
-│       ├── __main__.py     # Google Fire CLI entry point
-│       ├── cli.py          # CLI command implementations
+│       ├── __main__.py     # CLI entry point
 │       ├── server.py       # MCP server implementation
 │       ├── bluesky/        # Bluesky API integration
 │       └── tools/          # MCP tool implementations
-├── tests/                  # Test suite with CLI testing
-└── docs/                   # Documentation including CLI usage
+├── tests/                  # Test suite
+└── docs/                   # Documentation
 ```
 
 ### 6.3. Monitoring and Observability
@@ -855,11 +743,10 @@ mcp-bluesky/
 
 | Risk Category | Risk Description | Impact | Probability | Mitigation Strategy |
 |---------------|------------------|--------|-------------|-------------------|
-| **Python MCP Ecosystem** | Dependency on Python MCP libraries and ecosystem maturity | Low | Low | Official MCP Python SDK, comprehensive testing, active community support |
+| **Python MCP Ecosystem** | Newer Python MCP libraries vs Node.js ecosystem | Medium | Low | Close collaboration with MCP maintainers, fallback implementations |
 | **AT Protocol Changes** | Bluesky API modifications affecting functionality | High | Medium | Official SDK usage, comprehensive error handling, version pinning |
 | **Dependency Vulnerabilities** | Security vulnerabilities in PyPI packages | Medium | High | Automated scanning, rapid update process, minimal dependency surface |
 | **Python Runtime Issues** | CPython interpreter bugs or security issues | Medium | Low | LTS version usage, runtime monitoring, containerization |
-| **CLI Framework Dependencies** | Google Fire framework changes or issues | Low | Low | Stable Google-maintained library, fallback to argparse possible |
 
 ### 7.2. Operational Risks
 
@@ -928,31 +815,21 @@ mcp-bluesky/
 
 ## 10. Conclusion
 
-This Python-based technology stack with Google Fire CLI integration provides a robust, secure, and maintainable foundation for the Bluesky Social Media MCP Server. The selected technologies deliver:
+This Python-based technology stack provides a robust, secure, and maintainable foundation for the Bluesky Social Media MCP Server. The selected technologies deliver:
 
 **High Performance:** Python asyncio architecture optimized for I/O-intensive MCP and AT Protocol operations  
 **Robust Security:** Comprehensive input validation with Pydantic, secure credential management, and proactive vulnerability management  
-**Operational Excellence:** Simple deployment model with uv, Google Fire CLI for enhanced developer experience, and minimal infrastructure requirements  
+**Operational Excellence:** Simple deployment model with uv, excellent monitoring capabilities, and minimal infrastructure requirements  
 **Long-term Sustainability:** Python ecosystem stability, active community maintenance, and clear upgrade paths  
 **AI/ML Integration:** Native Python ecosystem compatibility for future AI agent enhancements  
-**Developer Experience:** Zero-configuration CLI with Google Fire, automatic help generation, and intuitive command structure  
-
-**Key Technology Highlights:**
-
-- **Python 3.12:** Modern async/await support with excellent performance for MCP operations
-- **Google Fire:** Zero-configuration CLI that automatically generates commands from Python classes
-- **FastMCP:** Python-native MCP server implementation with automatic tool discovery
-- **uv Package Manager:** Ultra-fast dependency resolution and installation
-- **Comprehensive Testing:** pytest with async support and CLI testing coverage
 
 **Next Steps:**
 
 1. Technical Lead approval and architecture review board sign-off
 2. Development environment setup with uv and exact dependency versions
-3. Google Fire CLI implementation and testing
-4. CI/CD pipeline configuration with automated security scanning
-5. Performance baseline establishment with load testing
-6. Security penetration testing and compliance validation
+3. CI/CD pipeline configuration with automated security scanning
+4. Performance baseline establishment with load testing
+5. Security penetration testing and compliance validation
 
 **Document Approval:**
 
@@ -965,4 +842,4 @@ This Python-based technology stack with Google Fire CLI integration provides a r
 
 ---
 
-*This Technology Stack document provides the definitive technical foundation for implementing a production-ready, enterprise-grade Bluesky Social Media MCP Server using modern Python tooling and Google Fire CLI that meets all specified requirements while maintaining the highest standards of security, performance, and maintainability.* 
+*This Technology Stack document provides the definitive technical foundation for implementing a production-ready, enterprise-grade Bluesky Social Media MCP Server using modern Python tooling that meets all specified requirements while maintaining the highest standards of security, performance, and maintainability.* 

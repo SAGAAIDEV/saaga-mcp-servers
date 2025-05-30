@@ -4,3 +4,6 @@
 [submodule "src/saaga_mcp_servers/development/mcp-cookie-cutter"]
 	path = src/saaga_mcp_servers/development/mcp-cookie-cutter
 	url = https://github.com/codingthefuturewithai/mcp-cookie-cutter.git
+[submodule "src/saaga_mcp_servers/development/mcp-github"]
+	path = src/saaga_mcp_servers/development/mcp-github
+	url = https://github.com/github/github-mcp-server.git

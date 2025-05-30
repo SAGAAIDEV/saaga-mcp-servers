@@ -41,3 +41,22 @@ For detailed setup instructions, deployment options, and usage examples, please 
 ## Target Audience
 
 Developers and administrators working with MCP servers who require enhanced control, observability, and resilience for their MCP tool integrations.
+
+```json
+{
+  "mcpServers": {
+    "base": {
+      "command": "uv",
+      "args": [
+        "--directory=/path/to/repo/saaga-mcp-servers/src/saaga_mcp_servers/base",
+        "run",
+        "server"
+      ],
+      "env": {
+        "sqldb_path": "/Users/andrew/saga/mcp-db.sqlite"
+      }
+    }
+  }
+}
+
+```

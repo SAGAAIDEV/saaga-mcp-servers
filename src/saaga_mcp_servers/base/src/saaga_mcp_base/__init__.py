@@ -1,4 +1,5 @@
 from .lib.datetime.tools.datetime import get_date, get_time
+from .lib.datetime.tools.wiat import wait
 from .base.base_mcp import create_mcp
 
 
@@ -22,7 +23,13 @@ def run_server():
     print("Base Server is running")
     mcp = create_mcp(
         "base",
-        tools=[read_logs, start_scheduler_services, stop_scheduler_services, get_time],
+        tools=[
+            read_logs,
+            start_scheduler_services,
+            stop_scheduler_services,
+            get_time,
+            wait,
+        ],
         parallel_tools=[get_date],
     )
     mcp.run(transport="stdio")

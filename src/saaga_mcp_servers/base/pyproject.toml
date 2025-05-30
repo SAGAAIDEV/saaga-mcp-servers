@@ -1,0 +1,38 @@
+[project]
+name = "saaga-mcp-base"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Andrew Oseen", email = "amovfx@protonmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "celery>=5.5.2",
+    "celery-redbeat>=2.3.2",
+    "flower>=2.0.1",
+    "loguru>=0.7.3",
+    "mcp>=1.7.1",
+    "pydantic-settings>=2.9.1",
+    "redis>=6.0.0",
+    "requests>=2.32.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
+
+[project.scripts]
+hello = "saaga_mcp_base:hello"
+server = "saaga_mcp_base:run_server"
+
+get_date = "saaga_mcp_base.lib.datetime.cli:main"
+read_logs = "saaga_mcp_base.lib.logging:read_logs"
+
+[tool.uv]
+config-settings = { editable_mode = "compat" }

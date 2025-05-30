@@ -150,6 +150,35 @@
        *   Error Handling: Log errors for invalid timezone specifications or custom format strings. Return appropriate error messages for malformed requests.
        *   Dependencies: Python `datetime` module, timezone handling libraries (e.g., `pytz` or `zoneinfo`).
        *   Priority: Medium
+   *   **TR-FR-UTIL-002: Wait/Sleep Tool**
+       *   Description: The system should provide an MCP tool that can pause execution for a specified period of time. This utility tool enables agents to implement polling patterns, rate limiting, or introduce deliberate delays between operations when needed.
+       *   Source: User Request
+       *   Inputs:
+           *   Duration (required): Time to wait specified as either:
+               *   Seconds (integer or float): Direct seconds value (e.g., 5, 2.5).
+               *   Duration string: Human-readable format (e.g., "30s", "2m", "1h", "1m30s").
+           *   Unit (optional): Time unit when duration is numeric ('seconds', 'minutes', 'hours'). Defaults to 'seconds'.
+           *   Message (optional): Custom message to display while waiting (e.g., "Waiting for API rate limit reset").
+       *   Processing Logic:
+           *   Parse and validate the duration input, converting to seconds if necessary.
+           *   Support various input formats:
+               *   Numeric: 30 (seconds), 1.5 (seconds)
+               *   String with units: "30s", "2m", "1h30m", "90s"
+               *   With explicit unit parameter: duration=2, unit="minutes"
+           *   Implement non-blocking sleep using appropriate async/threading mechanisms if the MCP server supports it.
+           *   Provide periodic status updates for longer waits (e.g., every 10% of total duration for waits > 30 seconds).
+           *   Allow for early termination if supported by the MCP protocol.
+       *   Outputs: 
+           *   Confirmation message when wait period begins, including total duration.
+           *   Optional progress updates during longer waits.
+           *   Completion message when wait period ends, including actual elapsed time.
+       *   Error Handling: 
+           *   Validate duration is positive and within reasonable limits (e.g., max 24 hours).
+           *   Log errors for invalid duration formats or out-of-range values.
+           *   Handle interruption gracefully if the wait is cancelled.
+           *   Return appropriate error messages for malformed duration specifications.
+       *   Dependencies: Python `time` or `asyncio` modules for sleep functionality, duration parsing utilities.
+       *   Priority: Medium
    *   **TR-FR-EXC-001: Exception Handling Decorator**
        *   Description: The system should provide a decorator that can be applied to MCP tools to handle exceptions and return detailed traceback information to the LLM context window. This decorator is particularly useful during development phases to help debug issues by providing comprehensive error information to the LLM for analysis and troubleshooting assistance. 
        *   This is complete and working. But should have a look over by a professional.

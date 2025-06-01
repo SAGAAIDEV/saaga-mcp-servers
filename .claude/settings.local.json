@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__conduit__search_jira_issues",
+      "mcp__sqlite__list_tables",
+      "mcp__sqlite__describe_table",
+      "mcp__sqlite__read_query",
+      "mcp__gsuite__create_draft",
+      "mcp__gsuite__auth",
+      "mcp__gsuite__query_gmail_emails",
+      "mcp__gsuite__get_email_by_id",
+      "mcp__base__wait",
+      "mcp__base__get_time",
+      "mcp__slack__slack_post_message",
+      "mcp__conduit__create_jira_issue",
+      "mcp__gsuite__send_draft",
+      "mcp__sqlite__write_query",
+      "mcp__conduit__update_jira_status",
+      "mcp__slack__slack_list_channels",
+      "mcp__conduit__list_atlassian_sites",
+      "mcp__base__get_date",
+      "mcp__gsuite__create_label",
+      "mcp__gsuite__set_email_labels",
+      "Bash(git rm:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "conduit"
+  ]
+}

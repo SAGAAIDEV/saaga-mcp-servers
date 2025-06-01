@@ -1,7 +1,7 @@
 import time
 
 
-def wait(minutes: float) -> str:
+async def wait(minutes: float) -> str:
     """
     Wait for the specified number of minutes.
     This is for having an agent wait to check some information.

@@ -8,16 +8,22 @@ The Ambient Agent is a lightweight Python monitoring service that continuously o
 
 ## Architecture
 
-The agent follows a simple polling architecture:
-- **Main Loop**: Async polling mechanism that checks Jira every 60 seconds
-- **Jira Integration**: Uses Conduit library for Jira API access
-- **Claude Execution**: Spawns non-blocking subprocesses for parallel task processing
-- **Logging**: Comprehensive Loguru-based logging with file rotation
+The agent follows an asynchronous polling architecture with non-blocking subprocess management:
 
-Key components:
+### Core Components
 - `src/ambient/main.py` - Core agent implementation with AmbientAgent class
-- `pyproject.toml` - UV package configuration with dependencies
-- `logs/` - Directory for agent logs and Claude process output
+- `src/ambient/cli.py` - Fire-based CLI interface with multiple commands (run, watch, status, config)
+- `src/ambient/config/settings.py` - Pydantic-based configuration with environment variable support
+- `src/ambient/config_loader.py` - Loads command-specific configurations (.md and .mcp.json files)
+- `src/ambient/process_manager.py` - Process lifecycle management (exists but not yet integrated)
+- `src/ambient/utils/transcriber.py` - AssemblyAI-based real-time audio transcription
+
+### Key Patterns
+1. **Non-blocking Execution**: Claude processes run asynchronously via `subprocess.Popen`
+2. **Process Tracking**: Dictionary maintains running processes with automatic cleanup
+3. **Graceful Shutdown**: Signal handlers ensure all subprocesses terminate on exit
+4. **Configuration Flexibility**: Multiple command configurations via `.md` and `.mcp.json` files
+5. **Task State Management**: Monitors Jira status changes (done/failed/confused) and terminates processes accordingly
 
 ## Common Commands
 
@@ -26,10 +32,16 @@ Key components:
 # Install dependencies with UV
 uv sync
 
-# Run the agent
+# Run as Jira monitor (main functionality)
 uv run ambient-agent
 
-# Or run directly
+# Run CLI commands
+uv run ambient run <command>     # Execute a specific command configuration
+uv run ambient watch             # Watch for voice commands via transcription
+uv run ambient status            # Show agent status
+uv run ambient config <command>  # Show configuration for a command
+
+# Run directly from monorepo root
 uv --directory=/Users/andrew/saga/saaga-mcp-servers/src/saaga_mcp_servers/agents/ambient run ambient-agent
 ```
 
@@ -40,42 +52,61 @@ uv pip install -e .
 
 # Run tests (when implemented)
 uv run pytest
+
+# Check types (when configured)
+uv run mypy src/ambient
 ```
 
-## Key Configuration
+## Configuration System
 
-Currently uses hard-coded configuration in `main.py`:
-- **JIRA_PROJECT**: "AGENT" - The Jira project to monitor
-- **POLL_INTERVAL**: 60 seconds - How often to check for new tasks
-- **JQL_QUERY**: Searches for tasks in "To Do" status
-- **MCP_JSON**: Path to MCP configuration file for Claude
+### Settings (`config/settings.py`)
+Uses Pydantic Settings with environment variable support:
+- **JIRA_PROJECT**: Default "AGENT" - The Jira project to monitor
+- **POLL_INTERVAL**: Default 60 seconds - How often to check for new tasks
+- **JQL_QUERY**: Computed property - Searches for tasks in "To Do" status
+- **ASSEMBLYAI_API_KEY**: Required for voice transcription features
+- **MCP_CONFIG_PATH**: Path to MCP configuration files
 
-## Important Patterns
+Environment variables are loaded from `.env` file.
 
-1. **Non-blocking Execution**: Claude processes run asynchronously to handle multiple tasks in parallel
-2. **Process Monitoring**: Each subprocess is tracked and cleaned up on completion or shutdown
-3. **Graceful Shutdown**: Ctrl+C triggers cleanup of all running processes
-4. **File Logging**: Each Claude execution logs stdout/stderr to separate timestamped files
+### Command Configurations
+- `config/do.md`: Instructions for async task management
+- `config/delegate.md`: Task delegation instructions
+- Command-specific: `{command}.md` and `.mcp.{command}.json` files
 
 ## Claude Integration Details
 
 The agent constructs Claude commands with specific parameters:
-- Reads task instructions from `.claude/commands/do.md`
+- Loads instructions from command-specific `.md` files
 - Fetches full Jira issue details including description
-- Passes combined prompt with task directive and Jira content
-- Uses `--disallowedTools Write` to prevent file modifications
+- Combines prompt with task directive and Jira content
+- Uses `--disallowedTools Write` by default (configurable)
 - Enables MCP config with `--mcp-config` flag
+- Non-blocking execution allows parallel processing
+
+## Jira Integration
+
+- Uses Conduit library for authentication and API access
+- Monitors tasks with "To Do" status in configured project
+- Tracks processed issues to avoid duplicates
+- Responds to status changes:
+  - "Done", "Solved", "Resolved": Terminates associated process
+  - "Failed", "Confused": Logs warning and terminates process
 
 ## Logging Structure
 
 - **Console**: Color-coded INFO level logs with timestamps
 - **Files**: Daily rotating DEBUG logs in `logs/ambient_YYYY-MM-DD.log`
 - **Process Logs**: Individual `{ISSUE_KEY}_{TIMESTAMP}_stdout/stderr.log` files
+- **Log Rotation**: 7-day retention with 10MB file size limit
 
 ## Dependencies
 
 - **conduit-connect**: Jira API integration
 - **loguru**: Advanced logging with rotation
+- **fire**: Google's CLI framework
+- **pydantic-settings**: Type-safe configuration management
 - **aiohttp**: Async HTTP client
-- **pyyaml**: Configuration parsing (future use)
+- **pyyaml**: Configuration parsing (installed but not yet used)
 - **python-dotenv**: Environment variable management
+- **assemblyai[extras]**: Real-time audio transcription

@@ -1,2 +1,3 @@
 logs/
 .ambient_agent.mcp.json
+*.json

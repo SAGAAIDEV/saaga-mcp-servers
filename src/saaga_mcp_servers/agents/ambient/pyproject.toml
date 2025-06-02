@@ -13,10 +13,13 @@ dependencies = [
     "aiohttp>=3.9.0",
     "python-dotenv>=1.0.0",
     "loguru>=0.7.3",
+    "fire>=0.7.0",
+    "assemblyai[extras]>=0.41.1",
 ]
 
 [project.scripts]
 ambient-agent = "ambient.main:main"
+ambient = "ambient.cli:main"
 
 [build-system]
 requires = ["hatchling"]

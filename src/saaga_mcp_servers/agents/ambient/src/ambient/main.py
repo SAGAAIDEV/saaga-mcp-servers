@@ -10,7 +10,6 @@ import signal
 import subprocess
 import sys
 from datetime import datetime
-from pathlib import Path
 from typing import Set, Optional, Dict
 
 from loguru import logger
@@ -23,6 +22,8 @@ except ImportError:
     )
     sys.exit(1)
 
+from ambient.config.settings import settings
+
 # Configure loguru
 logger.remove()  # Remove default handler
 # Console logging with colors
@@ -33,18 +34,12 @@ logger.add(
 )
 # File logging with rotation
 logger.add(
-    "logs/ambient_{time:YYYY-MM-DD}.log",
-    rotation="00:00",  # New file every day at midnight
-    retention="7 days",  # Keep logs for 7 days
+    f"{settings.log_dir}/ambient_{{time:YYYY-MM-DD}}.log",
+    rotation=settings.log_rotation_time,
+    retention=f"{settings.log_retention_days} days",
     format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
     level="DEBUG",
 )
-
-# Hard-coded configuration for MVP
-JIRA_PROJECT = "AGENT"
-POLL_INTERVAL = 10  # seconds
-JQL_QUERY = f'project = {JIRA_PROJECT} AND status = "To Do"'
-MCP_JSON = "/Users/andrew/saga/saaga-mcp-servers/src/saaga_mcp_servers/agents/ambient/.ambient_agent.mcp.json"
 
 
 class AmbientAgent:
@@ -55,7 +50,7 @@ class AmbientAgent:
         self.processed_issues: Set[str] = set()
         self.running_processes: Dict[str, subprocess.Popen] = {}
         self.running = True
-        self.log_dir = Path("logs")
+        self.log_dir = settings.log_dir
         self._setup_log_directory()
 
     def _setup_log_directory(self):
@@ -77,8 +72,8 @@ class AmbientAgent:
     async def fetch_jira_issues(self):
         """Fetch issues from Jira using JQL query"""
         try:
-            logger.debug(f"Executing JQL query: {JQL_QUERY}")
-            issues = self.jira_client.search(JQL_QUERY)
+            logger.debug(f"Executing JQL query: {settings.jql_query}")
+            issues = self.jira_client.search(settings.jql_query)
             logger.info(f"Found {len(issues)} issues in Jira")
             return issues
         except Exception as e:
@@ -99,13 +94,12 @@ class AmbientAgent:
         stderr_file = self.log_dir / f"{issue_key}_{timestamp}_stderr.log"
 
         # Read the do.md file to get task instructions
-        do_md_path = Path("/Users/andrew/saga/saaga-mcp-servers/.claude/commands/do.md")
-        if not do_md_path.exists():
-            logger.error(f"do.md file not found at {do_md_path}")
+        if not settings.do_md_path.exists():
+            logger.error(f"do.md file not found at {settings.do_md_path}")
             return
 
         try:
-            with open(do_md_path, "r") as f:
+            with open(settings.do_md_path, "r") as f:
                 do_instructions = f.read()
         except Exception as e:
             logger.error(f"Failed to read do.md: {e}")
@@ -165,7 +159,7 @@ Description:
             "--disallowedTools",
             "Write",
             "--mcp-config",
-            MCP_JSON,
+            settings.mcp_json,
             "--dangerously-skip-permissions",
         ]
         logger.info(f"Claude command: {' '.join(cmd)}")
@@ -312,8 +306,10 @@ Description:
         """Main execution loop"""
         await self.initialize()
 
-        logger.info(f"Starting Ambient Agent monitoring project '{JIRA_PROJECT}'")
-        logger.info(f"Polling interval: {POLL_INTERVAL} seconds")
+        logger.info(
+            f"Starting Ambient Agent monitoring project '{settings.jira_project}'"
+        )
+        logger.info(f"Polling interval: {settings.poll_interval} seconds")
         logger.info("Press Ctrl+C to stop")
 
         while self.running:
@@ -347,15 +343,15 @@ Description:
                         logger.debug(f"  - {issue_key} (PID: {process.pid})")
 
                 # Wait for next poll
-                logger.debug(f"Sleeping for {POLL_INTERVAL} seconds...")
-                await asyncio.sleep(POLL_INTERVAL)
+                logger.debug(f"Sleeping for {settings.poll_interval} seconds...")
+                await asyncio.sleep(settings.poll_interval)
 
             except asyncio.CancelledError:
                 logger.info("Received cancellation signal")
                 break
             except Exception as e:
                 logger.error(f"Error in main loop: {e}")
-                await asyncio.sleep(POLL_INTERVAL)
+                await asyncio.sleep(settings.poll_interval)
 
     def shutdown(self):
         """Graceful shutdown"""

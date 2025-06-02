@@ -8,7 +8,7 @@
 ## Email Operations
 - **Task-related emails**: When operating on a task that requires email handling, use the Gmail labels MCP tool to label emails with the corresponding Jira task ID
 - **Email retrieval**: Use appropriate Gmail MCP tools to query, read, and manage emails as needed
-- **Email organization**: Maintain proper labeling for tracking and audit purposes
+- **Email organization**: Maintain proper labeling for tracking and audit purposes. Label the email with the Jira issue.
 
 ## Jira Task Management
 - **Starting work**: When you begin working on a Jira task, transition its status to "In Progress"
@@ -30,5 +30,8 @@
 - Maintain clear audit trails through proper labeling and status updates
 - Coordinate between systems (email, Jira, database) to ensure data consistency
 - Handle errors gracefully and report issues through appropriate channels
+
+## Always
+Label any emails created by this process with the Jira Ticket.
 
 

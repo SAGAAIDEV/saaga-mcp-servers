@@ -57,14 +57,28 @@ The description MUST include all of the following sections:
 - Include any relevant API endpoints, databases, or external systems
 - Specify integration requirements or dependencies
 
+#### **Database Schemas**
+- Include relevant database schemas for any databases being integrated with
+- Provide table structures, column types, and relationships
+- Specify primary keys, foreign keys, and indexes
+- Include sample data or expected data formats
+- Note any database-specific constraints or triggers
+- **Common schemas to include**:
+  - SQLite: Use `mcp_sqlite_describe_table` to get current schema
+  - Neo4j: Include node types, relationships, and properties
+  - Custom databases: Provide CREATE TABLE statements or equivalent
+
 #### **Resources & References**
 - Link to relevant documentation
 - Include any existing Jira tickets or Confluence pages
 - Provide access credentials or system information if needed
 
-### 3. Issue Type
-- Set appropriate issue type: "Task", "Story", "Bug", "Epic"
+### 3. Issue Type and Status
+- Set appropriate issue type: "preflight"
 - Default to "Task" unless specifically requested otherwise
+- **IMPORTANT**: When creating the Jira issue, set the initial status to "preflight" NOT "todo"
+- The "preflight" status indicates the task is ready for assignment and execution
+- "todo" status is reserved for tasks that are already assigned and in active development
 
 ## Validation Checklist
 Before creating the Jira issue, verify:
@@ -72,10 +86,11 @@ Before creating the Jira issue, verify:
 - [ ] Used `mcp_base_get_time` to get current time reference
 - [ ] Project is set to "AGENT"
 - [ ] Summary is clear and descriptive
-- [ ] All five description sections are complete
+- [ ] All six description sections are complete
 - [ ] Acceptance criteria are specific and measurable
 - [ ] Deadline is realistic and clearly stated with proper date/time format
 - [ ] Technical guidance includes specific MCP tools
+- [ ] Database schemas included for any database integration tasks
 - [ ] Issue type is appropriate
 
 ## Example Usage with Date/Time Tools
@@ -111,10 +126,55 @@ Due: 2024-01-18 by 17:00 EST
 - Use `mcp_sqlite_write_query` to log interactions
 - Use AI processing for content analysis and response generation
 
+**Database Schemas**
+```sql
+-- Email interactions logging table
+CREATE TABLE email_interactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email_id TEXT NOT NULL,
+    sender_email TEXT NOT NULL,
+    subject TEXT,
+    received_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ai_response TEXT,
+    response_sent_at TIMESTAMP,
+    status TEXT CHECK(status IN ('pending', 'processed', 'sent', 'failed'))
+);
+
+-- Email templates for automated responses
+CREATE TABLE response_templates (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category TEXT NOT NULL,
+    template_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
 **Resources & References**
 - Gmail API documentation: [link]
 - Related ticket: AGENT-123
 ```
+
+## Task Completion Follow-up
+
+### Email Management
+When an issue is marked as **DONE**, perform the following email cleanup:
+
+#### Mark Related Emails as Read
+- Use `mcp_gsuite_mark_emails_as_read` to mark any emails related to the completed task as read
+- Search for emails by:
+  - Sender address if task was triggered by specific customer inquiries
+  - Subject keywords related to the task
+  - Date range during which the task was active
+- **Example process**:
+  1. Use `mcp_gsuite_query_gmail_emails` to find emails related to the completed task
+  2. Extract email IDs from the search results
+  3. Use `mcp_gsuite_mark_emails_as_read` with the collected email IDs
+  4. Log the email cleanup action in task comments
+
+#### Documentation Update
+- Update the Jira issue with completion notes
+- Include any emails that were processed or responded to
+- Note any follow-up emails that may still require attention
 
 ## Error Prevention
 - **NEVER** create Jira issues in projects other than "AGENT"

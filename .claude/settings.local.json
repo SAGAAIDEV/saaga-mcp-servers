@@ -21,11 +21,25 @@
       "mcp__base__get_date",
       "mcp__gsuite__create_label",
       "mcp__gsuite__set_email_labels",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "mcp__conduit__get_confluence_page",
+      "mcp__conduit__list_all_confluence_pages",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(uv init:*)",
+      "Bash(uv add:*)",
+      "mcp__conduit__update_jira_issue"
     ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "conduit"
+    "browsermcp",
+    "sqlite",
+    "neo4j",
+    "base",
+    "slack",
+    "transcriber",
+    "conduit",
+    "gsuite"
   ]
 }

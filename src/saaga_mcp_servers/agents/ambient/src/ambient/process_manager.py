@@ -8,7 +8,7 @@ from typing import Dict, Optional
 
 from loguru import logger
 
-from .config import DO_MD_PATH, MCP_JSON
+from .config.config import DO_MD_PATH, MCP_JSON
 
 
 class ProcessManager:

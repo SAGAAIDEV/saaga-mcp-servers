@@ -21,7 +21,11 @@
       "mcp__base__get_date",
       "mcp__gsuite__create_label",
       "mcp__gsuite__set_email_labels",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "mcp__conduit__get_confluence_page",
+      "mcp__conduit__list_all_confluence_pages",
+      "mcp__conduit__update_confluence_page",
+      "mcp__conduit__get_jira_boards"
     ]
   },
   "enableAllProjectMcpServers": true,

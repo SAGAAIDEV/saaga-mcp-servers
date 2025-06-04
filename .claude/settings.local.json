@@ -24,6 +24,11 @@
       "Bash(git rm:*)",
       "mcp__conduit__get_confluence_page",
       "mcp__conduit__list_all_confluence_pages",
+      "mcp__conduit__update_confluence_page",
+      "mcp__conduit__get_jira_boards",
+      "mcp__conduit__create_confluence_page_from_markdown",
+      "mcp__browsermcp__browser_navigate",
+      "mcp__browsermcp__browser_click"
       "Bash(find:*)",
       "Bash(ls:*)",
       "Bash(uv init:*)",

@@ -22,7 +22,7 @@ except ImportError:
     )
     sys.exit(1)
 
-from ambient.config.settings import settings
+from ambient_old.config.settings import settings
 
 # Configure loguru
 logger.remove()  # Remove default handler

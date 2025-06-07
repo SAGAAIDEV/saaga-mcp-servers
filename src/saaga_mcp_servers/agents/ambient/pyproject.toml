@@ -15,11 +15,12 @@ dependencies = [
     "loguru>=0.7.3",
     "fire>=0.7.0",
     "assemblyai[extras]>=0.41.1",
+    "langchain[anthropic]>=0.3.19",
+    "pydantic-settings>=2.9.1",
 ]
 
 [project.scripts]
-ambient-agent = "ambient.main:main"
-ambient = "ambient.cli:main"
+amb = "ambient.__main__:main"
 
 [build-system]
 requires = ["hatchling"]

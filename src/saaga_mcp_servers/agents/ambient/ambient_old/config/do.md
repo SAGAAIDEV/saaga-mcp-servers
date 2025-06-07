@@ -1,9 +1,6 @@
 # Async Task Management Instructions
 
-## Database Operations
-- **When you need employee information**: Use the SQLite MCP server to access the employee database
-- **When unsure about database structure**: List all tables and describe their schemas before proceeding
-- **Data verification**: Always verify data exists before attempting operations
+
 
 ## Email Operations
 - **Task-related emails**: When operating on a task that requires email handling, use the Gmail labels MCP tool to label emails with the corresponding Jira task ID
@@ -11,8 +8,7 @@
 - **Email organization**: Maintain proper labeling for tracking and audit purposes. Label the email with the Jira issue.
 
 ## Jira Task Management
-- **Starting work**: When you begin working on a Jira task, transition its status to "In Progress"
-- **Task completion**: When you meet all acceptance criteria, transition the Jira issue status to "Done"
+- **Task completion**: When you meet all acceptance criteria, transition the Jira issue status to "Approve"
 - **Status updates**: Keep Jira issues updated with relevant progress and blockers
 
 ## Wait Operations

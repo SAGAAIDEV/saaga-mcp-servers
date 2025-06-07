@@ -4,7 +4,7 @@ from loguru import logger
 # import pyaudio # Removed pyaudio
 # import threading # Was unused
 import sys
-from ambient.config.settings import settings
+from ambient_old.config.settings import settings
 
 
 class RealtimeTranscriber:

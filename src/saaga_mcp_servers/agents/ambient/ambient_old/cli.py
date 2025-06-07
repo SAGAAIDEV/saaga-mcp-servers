@@ -10,10 +10,10 @@ import sys
 
 from loguru import logger
 
-from ambient.config.settings import settings
-from ambient.config_loader import ConfigLoader
-from ambient.main import AmbientAgent
-from ambient.utils.transcriber import (
+from ambient_old.config.settings import settings
+from ambient_old.config_loader import ConfigLoader
+from ambient_old.main import AmbientAgent
+from ambient_old.utils.transcriber import (
     run_realtime_transcription,
 )
 
@@ -55,6 +55,10 @@ class AmbientCLI:
         print(f"Executing command: {command}")
         logger.info(f"Executing command: {command}")
         # Load the configuration for the specific command
+        #get jiras
+        #transition jira to in progress
+        #build claude command
+
         command_md, mcp_command_json = self.config_loader.load_command_config(command)
 
         logger.info(f"Command MD loaded: {bool(command_md)}")
@@ -74,6 +78,16 @@ class AmbientCLI:
             "--dangerously-skip-permissions",
         ]
         logger.info(f"Claude command: {' '.join(cmd)}")
+
+    def run_2(self):
+        #get jira
+        #build claude command
+            #build prompt
+            #select tools
+            #build mcp config
+            #select disallowed tools
+        #return result
+        pass
 
     def watch(self) -> None:
         """

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "mcp__conduit__get_confluence_page"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "browsermcp",
+    "sqlite",
+    "neo4j",
+    "base",
+    "slack",
+    "transcriber",
+    "conduit",
+    "git",
+    "gsuite",
+    "github"
+  ]
+}

@@ -1,0 +1,30 @@
+# MCP Researcher Configuration Example
+# Copy this file to ~/mcp-researcher/config.yaml and customize as needed
+
+# API Keys (can also be set via environment variables)
+# tavily_api_key: "your-tavily-api-key"
+# anthropic_api_key: "your-anthropic-api-key"
+# openai_api_key: "your-openai-api-key"
+
+# Deep Research Configuration
+deep_research:
+  # Number of research sources to explore
+  breadth: 4
+  
+  # Depth of research exploration
+  depth: 2
+  
+  # Number of concurrent research tasks
+  concurrency: 4
+  
+  # Target word count for reports
+  total_words: 2500
+
+# Environment variables can override these settings:
+# TAVILY_API_KEY=xxx
+# ANTHROPIC_API_KEY=xxx
+# OPENAI_API_KEY=xxx
+# DEEP_RESEARCH__BREADTH=6
+# DEEP_RESEARCH__DEPTH=3
+# DEEP_RESEARCH__CONCURRENCY=8
+# DEEP_RESEARCH__TOTAL_WORDS=3000

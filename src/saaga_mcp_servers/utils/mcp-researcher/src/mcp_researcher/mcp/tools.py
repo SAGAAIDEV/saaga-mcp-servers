@@ -1,6 +1,5 @@
 """MCP tools for the researcher service."""
 
-import asyncio
 from pathlib import Path
 from typing import Dict, Any, Optional
 

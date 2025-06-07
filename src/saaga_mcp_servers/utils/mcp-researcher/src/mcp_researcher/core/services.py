@@ -103,7 +103,7 @@ async def research(
     )
 
     logger.debug("Conducting research...")
-    context = await researcher.conduct_research()
+    await researcher.conduct_research()
 
     logger.debug("Writing report...")
     report = await researcher.write_report()

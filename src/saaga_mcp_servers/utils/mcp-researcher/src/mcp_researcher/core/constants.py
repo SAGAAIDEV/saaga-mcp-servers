@@ -21,5 +21,5 @@ DEFAULT_DEEP_RESEARCH_CONFIG = {
     "breadth": 4,
     "depth": 2,
     "concurrency": 4,
-    "total_words": 2500
+    "total_words": 2500,
 }

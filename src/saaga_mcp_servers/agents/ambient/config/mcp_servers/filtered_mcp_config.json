@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "browsermcp": {
+      "command": "npx",
+      "args": [
+        "@browsermcp/mcp@latest"
+      ]
+    },
+    "gsuite": {
+      "command": "uv",
+      "args": [
+        "--directory=/Users/andrew/saga/saaga-mcp-servers/src/saaga_mcp_servers/operations/mcp-gsuite/src",
+        "run",
+        "mcp-gsuite",
+        "--gauth-file",
+        "/Users/andrew/saga/saaga-mcp-servers/src/saaga_mcp_servers/operations/mcp-gsuite/.credentials/.gauth.json",
+        "--accounts-file",
+        "/Users/andrew/saga/saaga-mcp-servers/src/saaga_mcp_servers/operations/mcp-gsuite/.credentials/.accounts.json",
+        "--credentials-dir",
+        "/Users/andrew/saga/saaga-mcp-servers/src/saaga_mcp_servers/operations/mcp-gsuite/.credentials/.credentials"
+      ]
+    },
+    "conduit": {
+      "command": "/Users/andrew/saga/saaga-mcp-servers/src/saaga_mcp_servers/development/conduit/.venv/bin/mcp-server-conduit"
+    }
+  }
+}

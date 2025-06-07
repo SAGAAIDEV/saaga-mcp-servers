@@ -17,15 +17,14 @@ os.environ["TOTAL_WORDS"] = str(settings.deep_research.total_words)
 
 
 async def research(
-    query: str, 
-    report_type: str = "deep", 
-    sources: list[str] = [],
+    query: str,
+    report_type: str = "deep",
     tone: str = "objective",
-    role: str = "senior software architect"
+    role: str = "senior software architect",
 ) -> str:
     """
     Perform comprehensive research on a topic using GPT Researcher with MCP integration.
-    
+
     This function leverages GPT Researcher to conduct web searches via Tavily API and
     compile comprehensive research reports using AI analysis. It supports hybrid research
     combining web search results with MCP data sources.
@@ -73,10 +72,10 @@ async def research(
         - Detailed analysis with citations
         - Key insights and conclusions
         - References to sources used
-        
+
     Raises:
         Exception: If API keys are missing or if the research process fails.
-        
+
     Example:
         report = await research(
             "What are the latest developments in quantum computing?",
@@ -101,7 +100,6 @@ async def research(
                 "env": {"TAVILY_API_KEY": settings.tavily_api_key},
             }
         ],
-        source_urls=sources,
     )
 
     logger.debug("Conducting research...")

@@ -28,7 +28,8 @@
       "mcp__conduit__get_jira_boards",
       "mcp__conduit__create_confluence_page_from_markdown",
       "mcp__browsermcp__browser_navigate",
-      "mcp__browsermcp__browser_click"
+      "mcp__browsermcp__browser_click",
+      "mcp__researcher__research"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -11,5 +11,10 @@ SD/pages/27754514/02+-+Technical+Requirements+Definition+Standard
 Analysis
 SD/pages/29589555/03+-+Analysis+and+Proposed+solutions
 
+then call the research mcp tool
+save the report in 03_Technology_Research.
+
+
+
 
 Only create a documentation file.

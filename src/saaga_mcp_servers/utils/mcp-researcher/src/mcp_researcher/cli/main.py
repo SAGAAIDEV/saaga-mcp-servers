@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 import fire
 
 from mcp_researcher.core.config import settings
@@ -9,7 +10,7 @@ from .config import ConfigCLI
 
 class MCPResearcherCLI:
     """MCP Researcher Command Line Interface."""
-    
+
     def __init__(self):
         """Initialize the CLI with sub-commands."""
         self.config = ConfigCLI()
@@ -17,18 +18,30 @@ class MCPResearcherCLI:
     def hello(self, name: str = "World") -> None:
         """
         Print a hello message.
-        
+
         Args:
             name: Name to greet (default: World)
         """
         logger.info(f"Hello, {name}!")
-        
+
         # Safely print API keys (showing only first 4 chars)
         try:
-            tavily_key = settings.tavily_api_key[:4] + "..." if settings.tavily_api_key else "NOT SET"
-            anthropic_key = settings.anthropic_api_key[:4] + "..." if settings.anthropic_api_key else "NOT SET"
-            openai_key = settings.openai_api_key[:4] + "..." if hasattr(settings, 'openai_api_key') and settings.openai_api_key else "NOT SET"
-            
+            tavily_key = (
+                settings.tavily_api_key[:4] + "..."
+                if settings.tavily_api_key
+                else "NOT SET"
+            )
+            anthropic_key = (
+                settings.anthropic_api_key[:4] + "..."
+                if settings.anthropic_api_key
+                else "NOT SET"
+            )
+            openai_key = (
+                settings.openai_api_key[:4] + "..."
+                if hasattr(settings, "openai_api_key") and settings.openai_api_key
+                else "NOT SET"
+            )
+
             logger.info("API Keys Status:")
             logger.info(f"  Tavily API Key: {tavily_key}")
             logger.info(f"  Anthropic API Key: {anthropic_key}")
@@ -44,35 +57,37 @@ class MCPResearcherCLI:
     def status(self) -> None:
         """Check the status of the MCP Researcher."""
         from ..core.constants import DEFAULT_CONFIG_PATH
-        
+
         logger.info("MCP Researcher is ready!")
         logger.debug("Debug logging is enabled")
-        
+
         # Show config file location
         logger.info(f"Config file: {DEFAULT_CONFIG_PATH}")
         logger.info(f"Config exists: {DEFAULT_CONFIG_PATH.exists()}")
-        
+
         # Show research configuration
         logger.info("Research Configuration:")
         logger.info(f"  Deep Research Breadth: {settings.deep_research.breadth}")
         logger.info(f"  Deep Research Depth: {settings.deep_research.depth}")
-        logger.info(f"  Deep Research Concurrency: {settings.deep_research.concurrency}")
+        logger.info(
+            f"  Deep Research Concurrency: {settings.deep_research.concurrency}"
+        )
         logger.info(f"  Total Words: {settings.deep_research.total_words}")
-    
+
     def research(
-        self, 
-        query: str, 
-        report_type: str = "deep", 
-        sources: list[str] = None,
+        self,
+        query: str,
+        report_type: str = "deep",
         tone: str = "objective",
-        role: str = "senior software architect"
+        role: str = "senior software architect",
+        output_file: str = None,
     ) -> None:
         """
         Perform comprehensive research on a topic using GPT Researcher.
-        
+
         This command leverages GPT Researcher to conduct web searches via Tavily API and
         compile comprehensive research reports using AI analysis.
-        
+
         Args:
             query: The research question or topic to investigate. Should be a clear,
                    specific question or topic for best results.
@@ -110,7 +125,9 @@ class MCPResearcherCLI:
                   technical depth, and practical considerations in the report.
                   Examples: "data scientist", "product manager", "security analyst",
                   "DevOps engineer", "junior developer", "CTO", "researcher"
-        
+            output_file: Optional file path to save the report. If provided, the report
+                        will be written to this file in addition to being displayed.
+
         Examples:
             mcp-researcher research "What is quantum computing?"
             mcp-researcher research "Latest AI developments" --report_type outline_report
@@ -118,26 +135,39 @@ class MCPResearcherCLI:
             mcp-researcher research "Climate change" --tone simple --report_type detailed_report
             mcp-researcher research "Microservices patterns" --role "DevOps engineer"
             mcp-researcher research "AI ethics" --role "product manager" --tone informative
+            mcp-researcher research "Docker basics" --output_file "docker-report.md"
         """
-        if sources is None:
-            sources = []
-            
+
         logger.info(f"Research query: {query}")
         logger.info(f"Report type: {report_type}")
         logger.info(f"Tone: {tone}")
         logger.info(f"Role: {role}")
-        if sources:
-            logger.info(f"Sources: {sources}")
-        
+
+        if output_file:
+            logger.info(f"Output file: {output_file}")
+
         # Run the async research function
         try:
-            report = asyncio.run(research(
-                query, 
-                report_type=report_type, 
-                sources=sources,
-                tone=tone,
-                role=role
-            ))
+            report = asyncio.run(
+                research(
+                    query,
+                    report_type=report_type,
+                    tone=tone,
+                    role=role,
+                )
+            )
+
+            # Save to file if requested
+            if output_file:
+                try:
+                    output_path = Path(output_file)
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
+                    output_path.write_text(report, encoding="utf-8")
+                    logger.info(f"Report saved to: {output_path.absolute()}")
+                except Exception as e:
+                    logger.error(f"Failed to save report to file: {e}")
+
+            # Display the report
             logger.info("Research Report:")
             logger.info("-" * 80)
             logger.info(report)

@@ -3,9 +3,11 @@
     "allow": [
       "Bash(find:*)",
       "Bash(ls:*)",
-      "mcp__conduit__get_confluence_page"
+      "mcp__conduit__get_confluence_page",
+      "mcp__researcher__deep_research"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "browsermcp",
     "sqlite",
@@ -16,6 +18,7 @@
     "conduit",
     "git",
     "gsuite",
-    "github"
+    "github",
+    "researcher"
   ]
 }

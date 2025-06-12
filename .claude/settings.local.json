@@ -34,7 +34,9 @@
       "mcp__context7__get-library-docs",
       "mcp__neo4j__GetDatabaseInfo",
       "mcp__neo4j__ConnectWithEnv",
-      "mcp__neo4j__Connect"
+      "mcp__neo4j__Connect",
+      "mcp__gptr-mcp__quick_search",
+      "mcp__gptr-mcp__deep_research"
     ]
   },
   "enableAllProjectMcpServers": true,

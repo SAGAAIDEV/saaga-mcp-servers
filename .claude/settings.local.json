@@ -29,7 +29,12 @@
       "mcp__conduit__create_confluence_page_from_markdown",
       "mcp__browsermcp__browser_navigate",
       "mcp__browsermcp__browser_click",
-      "mcp__researcher__research"
+      "mcp__researcher__research",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "mcp__neo4j__GetDatabaseInfo",
+      "mcp__neo4j__ConnectWithEnv",
+      "mcp__neo4j__Connect"
     ]
   },
   "enableAllProjectMcpServers": true,

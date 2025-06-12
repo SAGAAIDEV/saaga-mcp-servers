@@ -1,0 +1,149 @@
+version: '3.8'
+
+services:
+  # Neo4j Graph Database
+  neo4j:
+    image: neo4j:5-community
+    container_name: saaga-neo4j
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/var/lib/neo4j/import
+      - neo4j_plugins:/plugins
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # MongoDB NoSQL Database
+  mongodb:
+    image: mongo:7
+    container_name: saaga-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=saaga
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # Qdrant Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: saaga-qdrant
+    ports:
+      - "6333:6333"  # REST API
+      - "6334:6334"  # gRPC
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=6333
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__LOG_LEVEL=INFO
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:6333/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  # Redis In-Memory Data Store
+  redis:
+    image: redis:7-alpine
+    container_name: saaga-redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=password
+    volumes:
+      - redis_data:/data
+    command: redis-server --requirepass password --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # SQLite (using a lightweight container that provides SQLite)
+  sqlite:
+    image: nouchka/sqlite3:latest
+    container_name: saaga-sqlite
+    stdin_open: true
+    tty: true
+    volumes:
+      - sqlite_data:/data
+    command: /bin/sh -c "mkdir -p /data && touch /data/saaga.db && tail -f /dev/null"
+    restart: unless-stopped
+
+  # Optional: SQLite Web UI for easier management
+  sqlite-web:
+    image: tomdesinto/sqlite-web:latest
+    container_name: saaga-sqlite-web
+    ports:
+      - "8080:8080"
+    volumes:
+      - sqlite_data:/data
+    environment:
+      - SQLITE_DATABASE=/data/saaga.db
+    depends_on:
+      - sqlite
+    command: sqlite_web.py --host 0.0.0.0 --port 8080 /data/saaga.db
+    restart: unless-stopped
+
+volumes:
+  # Neo4j volumes
+  neo4j_data:
+    driver: local
+  neo4j_logs:
+    driver: local
+  neo4j_import:
+    driver: local
+  neo4j_plugins:
+    driver: local
+  
+  # MongoDB volumes
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  
+  # Qdrant volumes
+  qdrant_data:
+    driver: local
+  
+  # SQLite volume
+  sqlite_data:
+    driver: local
+  
+  # Redis volume
+  redis_data:
+    driver: local
+
+networks:
+  default:
+    name: saaga-db-network
+    driver: bridge

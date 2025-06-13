@@ -121,16 +121,7 @@
   - API: get_voices(), set_voice(), get_default_voice()
   - Storage: JSON preference file
 
-#### Context Analyzer
-- **Responsibility**: Analyze text for speech characteristics
-- **Key Functions**:
-  - Detect emotion and tone
-  - Identify questions vs statements
-  - Find emphasis points
-  - Determine appropriate pacing
-- **Interfaces**:
-  - Input: Text content + optional hints
-  - Output: Speech synthesis parameters
+
 
 #### Audio Streamer
 - **Responsibility**: Handle audio streaming and delivery
@@ -244,43 +235,8 @@
 ```
 
 ### Error Handling & Resilience
+If an error happens catch and return the trace log, this is for development.
 
-#### Circuit Breaker Pattern
-```python
-class CircuitBreaker:
-    states = ["CLOSED", "OPEN", "HALF_OPEN"]
-    
-    # CLOSED: Normal operation
-    # OPEN: Failing, reject requests
-    # HALF_OPEN: Testing recovery
-    
-    failure_threshold = 5
-    recovery_timeout = 60  # seconds
-    success_threshold = 3
-```
-
-#### Retry Strategy
-```python
-class RetryPolicy:
-    max_retries = 3
-    base_delay = 1.0  # seconds
-    max_delay = 60.0
-    exponential_base = 2
-    
-    # Retryable errors:
-    # - Network timeouts
-    # - 503 Service Unavailable
-    # - 429 Rate Limit (with delay)
-```
-
-#### Graceful Degradation
-```python
-# Fallback Strategies
-1. Cache hit on API failure
-2. Reduced quality mode
-3. Queue for later processing
-4. Clear error messaging
-```
 
 ### Configuration Management
 

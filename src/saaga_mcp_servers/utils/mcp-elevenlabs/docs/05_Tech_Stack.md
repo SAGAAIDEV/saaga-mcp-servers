@@ -90,6 +90,12 @@
 - **Security**: Google-maintained, minimal dependencies
 - **Rationale**: Simple, intuitive CLI creation for MCP server commands
 
+#### loguru (^0.7.0)
+- **Purpose**: Modern logging library with structured logging
+- **License**: MIT
+- **Security**: Well-maintained, no known vulnerabilities
+- **Rationale**: Superior logging experience with structured output, async support, and rich formatting
+
 ### Development Dependencies
 
 #### pytest (^8.3.0)
@@ -194,9 +200,9 @@ uv pip install .
 ## Monitoring and Observability
 
 ### Logging
-- **Library**: Python logging + optional structlog
-- **Levels**: ERROR, WARNING, INFO, DEBUG
-- **Format**: Structured JSON for parsing
+- **Library**: loguru
+- **Levels**: ERROR, WARNING, INFO, DEBUG, TRACE
+- **Format**: Structured JSON for parsing with rich formatting
 
 ### Metrics
 - API call latency (p50, p95, p99)
@@ -222,6 +228,7 @@ uv pip install .
 | **Config** | pydantic-settings | 2.0+ | MIT | Environment management |
 | **YAML** | PyYAML | 6.0+ | MIT | Configuration files |
 | **CLI** | fire | 0.6+ | Apache-2.0 | Command-line interface |
+| **Logging** | loguru | 0.7+ | MIT | Modern structured logging |
 | **Testing** | pytest | 8.3+ | MIT | Standard Python testing |
 | **External API** | ElevenLabs | v1 | Commercial | Best-in-class TTS |
 

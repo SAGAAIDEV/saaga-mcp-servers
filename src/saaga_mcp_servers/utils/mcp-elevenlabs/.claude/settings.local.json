@@ -4,7 +4,9 @@
       "Bash(find:*)",
       "Bash(ls:*)",
       "mcp__conduit__get_confluence_page",
-      "mcp__researcher__deep_research"
+      "mcp__researcher__deep_research",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs"
     ]
   },
   "enableAllProjectMcpServers": true,

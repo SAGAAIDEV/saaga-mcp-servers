@@ -48,7 +48,16 @@
       "mcp__browsermcp__browser_type",
       "mcp__browsermcp__browser_go_back",
       "mcp__browsermcp__browser_hover",
-      "mcp__browsermcp__browser_wait"
+      "mcp__browsermcp__browser_wait",
+      "mcp__transcriber__transcribe_file",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "mcp__transcriber__read_transcript",
+      "mcp__researcher__deep_research",
+      "mcp__researcher__get_research_sources",
+      "Bash(cookiecutter:*)",
+      "Bash(tree:*)",
+      "Bash(mkdir:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

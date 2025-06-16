@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__neo4j__ConnectWithEnv",
+      "mcp__sqlite__list_tables",
+      "Bash(redis-cli:*)",
+      "mcp__mcp_gemini__gemini_generate",
+      "mcp__neo4j__Query",
+      "Bash(python:*)"
+    ],
+    "deny": []
+  }
+}

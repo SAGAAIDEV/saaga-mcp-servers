@@ -13,3 +13,6 @@
 [submodule "src/saaga_mcp_servers/research/gptr-mcp"]
 	path = src/saaga_mcp_servers/research/gptr-mcp
 	url = https://github.com/assafelovic/gptr-mcp.git
+[submodule "src/saaga_mcp_servers/operations/mcp-google-docs"]
+	path = src/saaga_mcp_servers/operations/mcp-google-docs
+	url = https://github.com/ophydami/MCP-Google-Doc.git

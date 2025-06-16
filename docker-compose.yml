@@ -88,31 +88,6 @@ services:
       start_period: 10s
     restart: unless-stopped
 
-  # SQLite (using a lightweight container that provides SQLite)
-  sqlite:
-    image: nouchka/sqlite3:latest
-    container_name: saaga-sqlite
-    stdin_open: true
-    tty: true
-    volumes:
-      - sqlite_data:/data
-    command: /bin/sh -c "mkdir -p /data && touch /data/saaga.db && tail -f /dev/null"
-    restart: unless-stopped
-
-  # Optional: SQLite Web UI for easier management
-  sqlite-web:
-    image: tomdesinto/sqlite-web:latest
-    container_name: saaga-sqlite-web
-    ports:
-      - "8080:8080"
-    volumes:
-      - sqlite_data:/data
-    environment:
-      - SQLITE_DATABASE=/data/saaga.db
-    depends_on:
-      - sqlite
-    command: sqlite_web.py --host 0.0.0.0 --port 8080 /data/saaga.db
-    restart: unless-stopped
 
 volumes:
   # Neo4j volumes

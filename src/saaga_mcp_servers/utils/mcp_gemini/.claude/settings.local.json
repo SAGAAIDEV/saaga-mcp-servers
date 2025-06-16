@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__mcp_gemini__echo",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(uv add:*)"
+    ],
+    "deny": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(python:*)",
+      "Bash(true)",
+      "mcp__gsuite__get_user_activity_report",
+      "mcp__gsuite__auth"
+    ],
+    "deny": []
+  }
+}

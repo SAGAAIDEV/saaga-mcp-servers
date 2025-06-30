@@ -30,7 +30,7 @@ def setup_logging(log_to_file: bool = True):
         logger.add(
             log_file,
             rotation="10 MB",  # Rotate when file reaches 10MB
-            retention="7 days",  # Keep logs for 7 days
+            retention="4 hours",  # Keep logs for 4 hours
             level="DEBUG",  # More verbose logging to file
             format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
             enqueue=True,  # Thread-safe logging
@@ -43,7 +43,7 @@ def setup_logging(log_to_file: bool = True):
         logger.add(
             error_log_file,
             rotation="10 MB",
-            retention="30 days",  # Keep error logs longer
+            retention="12 hours",  # Keep error logs for 12 hours
             level="ERROR",
             format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
             enqueue=True,

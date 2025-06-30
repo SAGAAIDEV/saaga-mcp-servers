@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 from .auth import credentials as cred_module
-import logging
+from loguru import logger
 import traceback
 from datetime import datetime
 import pytz
@@ -46,8 +46,8 @@ class CalendarService:
             return calendars
 
         except Exception as e:
-            logging.error(f"Error retrieving calendars: {str(e)}")
-            logging.error(traceback.format_exc())
+            logger.error(f"Error retrieving calendars: {str(e)}")
+            logger.error(traceback.format_exc())
             raise e
 
     def get_events(
@@ -107,7 +107,7 @@ class CalendarService:
                 try:
                     color_definitions = self.get_colors()
                 except Exception as e:
-                    logging.warning(f"Failed to fetch color definitions: {str(e)}")
+                    logger.warning(f"Failed to fetch color definitions: {str(e)}")
 
             # Process and return the events
             processed_events = []
@@ -144,8 +144,8 @@ class CalendarService:
             return processed_events
 
         except Exception as e:
-            logging.error(f"Error retrieving calendar events: {str(e)}")
-            logging.error(traceback.format_exc())
+            logger.error(f"Error retrieving calendar events: {str(e)}")
+            logger.error(traceback.format_exc())
             raise e
 
     def create_event(
@@ -212,8 +212,8 @@ class CalendarService:
             return created_event
 
         except Exception as e:
-            logging.error(f"Error creating calendar event: {str(e)}")
-            logging.error(traceback.format_exc())
+            logger.error(f"Error creating calendar event: {str(e)}")
+            logger.error(traceback.format_exc())
             return None
 
     def delete_event(
@@ -241,8 +241,8 @@ class CalendarService:
             return True
 
         except Exception as e:
-            logging.error(f"Error deleting calendar event {event_id}: {str(e)}")
-            logging.error(traceback.format_exc())
+            logger.error(f"Error deleting calendar event {event_id}: {str(e)}")
+            logger.error(traceback.format_exc())
             return False
 
     def update_event(
@@ -277,35 +277,19 @@ class CalendarService:
             dict: Updated event data or None if update fails.
         """
         try:
-            # First, get the existing event to preserve fields not being updated
-            existing_event = (
-                self.service.events()
-                .get(calendarId=calendar_id, eventId=event_id)
-                .execute()
-            )
-            if not existing_event:
-                logging.error(f"Event with ID {event_id} not found.")
-                return None
-
             # Prepare event data with updated fields
             event_update_body = {}
 
             if summary is not None:
                 event_update_body["summary"] = summary
             if start_time is not None:
-                event_update_body["start"] = existing_event.get("start", {})
-                event_update_body["start"]["dateTime"] = start_time
+                event_update_body["start"] = {"dateTime": start_time}
                 if timezone:
                     event_update_body["start"]["timeZone"] = timezone
-                elif "timeZone" not in event_update_body["start"]:
-                    event_update_body["start"]["timeZone"] = "UTC"  # Default if not set
             if end_time is not None:
-                event_update_body["end"] = existing_event.get("end", {})
-                event_update_body["end"]["dateTime"] = end_time
+                event_update_body["end"] = {"dateTime": end_time}
                 if timezone:
                     event_update_body["end"]["timeZone"] = timezone
-                elif "timeZone" not in event_update_body["end"]:
-                    event_update_body["end"]["timeZone"] = "UTC"  # Default if not set
             if location is not None:
                 event_update_body["location"] = location
             if description is not None:
@@ -315,15 +299,15 @@ class CalendarService:
                     {"email": email} for email in attendees
                 ]
 
-            # If no fields are provided for update, return the existing event
+            # If no fields are provided for update, log and return None
             if not event_update_body:
-                logging.info(f"No fields provided to update for event {event_id}.")
-                return existing_event
+                logger.info(f"No fields provided to update for event {event_id}.")
+                return None
 
-            # Update the event
+            # Update the event using patch for partial updates
             updated_event = (
                 self.service.events()
-                .update(
+                .patch(
                     calendarId=calendar_id,
                     eventId=event_id,
                     body=event_update_body,
@@ -335,8 +319,8 @@ class CalendarService:
             return updated_event
 
         except Exception as e:
-            logging.error(f"Error updating calendar event {event_id}: {str(e)}")
-            logging.error(traceback.format_exc())
+            logger.error(f"Error updating calendar event {event_id}: {str(e)}")
+            logger.error(traceback.format_exc())
             return None
 
     def get_colors(self) -> dict:
@@ -353,6 +337,6 @@ class CalendarService:
                 "event": colors.get("event", {})
             }
         except Exception as e:
-            logging.error(f"Error retrieving calendar colors: {str(e)}")
-            logging.error(traceback.format_exc())
+            logger.error(f"Error retrieving calendar colors: {str(e)}")
+            logger.error(traceback.format_exc())
             raise e

@@ -57,7 +57,12 @@
       "mcp__researcher__get_research_sources",
       "Bash(cookiecutter:*)",
       "Bash(tree:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(kill:*)",
+      "Bash(grep:*)",
+      "Bash(chmod:*)",
+      "Bash(uv run:*)",
+      "Bash(rm:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

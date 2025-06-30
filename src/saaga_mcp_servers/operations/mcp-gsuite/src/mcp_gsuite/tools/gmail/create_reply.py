@@ -31,27 +31,10 @@ async def create_reply(
         gmail_service = gmail.GmailService(user_id=user_id)
         logger.debug(f"GmailService initialized for user_id: {user_id}")
 
-        # Fetch the original message details first
-        original_message_data, _ = await asyncio.to_thread(
-            gmail_service.get_email_by_id, email_id=original_message_id
-        )
-
-        if not original_message_data:
-            logger.warning(
-                f"Failed to retrieve original message for reply. user_id: {user_id}, original_message_id: {original_message_id}"
-            )
-            return json.dumps(
-                {
-                    "message": "Failed to retrieve original message to reply to.",
-                    "user_id": user_id,
-                    "original_message_id": original_message_id,
-                },
-                indent=2,
-            )
-
+        # The create_reply method will fetch the original message internally
         result = await asyncio.to_thread(
             gmail_service.create_reply,
-            original_message=original_message_data,
+            original_message_id=original_message_id,  # Fixed parameter name
             reply_body=reply_body,
             send=send,
             cc=cc,
@@ -71,15 +54,32 @@ async def create_reply(
             )
 
         action = "sent" if send else "drafted"
+        result_id = result.get("id") if send else result.get("id", result.get("draft", {}).get("id"))
         logger.info(
-            f"Successfully {action} reply for user_id: {user_id}, result_id: {result.get('id')}"
+            f"Successfully {action} reply for user_id: {user_id}, result_id: {result_id}"
         )
-        return json.dumps(result, indent=2)
+        
+        # Create a more informative response
+        response = {
+            "status": f"Reply {action} successfully",
+            "action": action,
+            "id": result_id,
+            "original_message_id": original_message_id,
+            "user_id": user_id,
+            "details": result
+        }
+        
+        return json.dumps(response, indent=2)
 
     except Exception as e:
         logger.error(
             f"Error in create_reply for user_id: {user_id}, original_message_id: {original_message_id}. Error: {str(e)}",
             exc_info=True,
         )
-        error_message = {"error": f"Failed to create reply for {user_id}: {str(e)}"}
-        raise Exception(error_message)
+        error_details = {
+            "error": f"Failed to create reply for {user_id}: {str(e)}",
+            "user_id": user_id,
+            "original_message_id": original_message_id,
+            "error_type": type(e).__name__
+        }
+        raise Exception(json.dumps(error_details, indent=2))

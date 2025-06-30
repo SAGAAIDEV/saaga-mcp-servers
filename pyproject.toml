@@ -7,7 +7,12 @@ authors = [
     { name = "Andrew Oseen", email = "amovfx@protonmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastmcp>=2.9.2",
+    "gpt-researcher>=0.14.0",
+    "ipykernel>=6.29.5",
+    "python-dotenv>=1.1.1",
+]
 
 [build-system]
 requires = ["hatchling"]

@@ -1,5 +1,9 @@
 ea() {
-    claude --mcp-config /Users/andrew/saga/saaga-mcp-servers/.claude/mcp_configs/.mcp.ea.json --system-prompt "$(cat /Users/andrew/saga/saaga-mcp-servers/.claude/system_prompts/ea.md)" --disallowedTools "mcp__slack__slack_list_channels" "$@"
+    claude --mcp-config /Users/andrew/saga/saaga-mcp-servers/.claude/mcp_configs/.mcp.ea.json --system-prompt "$(cat /Users/andrew/saga/saaga-mcp-servers/.claude/system_prompts/ea.md)" --disallowedTools "mcp__slack__slack_list_channels" --dangerously-skip-permissions "$@"
+}
+
+ec() {
+    claude --mcp-config /Users/andrew/saga/saaga-mcp-servers/.claude/mcp_configs/.mcp.ec.json --system-prompt "$(cat /Users/andrew/saga/saaga-mcp-servers/.claude/system_prompts/ec.md)" --dangerously-skip-permissions "$@"
 }
 
 dev() {
@@ -8,4 +12,8 @@ dev() {
 
 spirit() {
     claude --mcp-config /Users/andrew/saga/saaga-mcp-servers/.claude/mcp_configs/.mcp.spirit.json --system-prompt "$(cat /Users/andrew/saga/saaga-mcp-servers/.claude/system_prompts/spirit.md)" --disallowedTools "Write(*.py)" --dangerously-skip-permissions "$@"
+}
+
+rec() {
+    claude --mcp-config /Users/andrew/saga/saaga-mcp-servers/.claude/mcp_configs/.mcp.rec.json --system-prompt "$(cat /Users/andrew/saga/saaga-mcp-servers/.claude/system_prompts/recruiter.md)" --dangerously-skip-permissions --disallowedTools "Write(*.py)" "$@"
 }

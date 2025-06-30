@@ -16,3 +16,6 @@
 [submodule "src/saaga_mcp_servers/operations/mcp-google-docs"]
 	path = src/saaga_mcp_servers/operations/mcp-google-docs
 	url = https://github.com/ophydami/MCP-Google-Doc.git
+[submodule "src/saaga_mcp_servers/utils/elevenlabs-mcp"]
+	path = src/saaga_mcp_servers/utils/elevenlabs-mcp
+	url = https://github.com/elevenlabs/elevenlabs-mcp.git
